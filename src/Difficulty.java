@@ -33,7 +33,13 @@ public class Difficulty implements Comparable<Difficulty> {
      */
     @Override
     public int compareTo(Difficulty other) {
-        throw new UnsupportedOperationException("TODO: implement Difficulty.compareTo");
+        if(this.rank() < other.rank()){
+            return -1;
+        }
+        if(this.rank() > other.rank()){
+            return 1;
+        }
+        return 0;
     }
 
     @Override

@@ -194,8 +194,27 @@ public class TodoGui extends JFrame {
      *       show the message with showError(...).
      */
     private void addTask() {
-        // TODO
-        showError("addTask is not finished yet");
+        String description = descriptionField.getText().trim();
+        if (description.isEmpty()) {
+            showError("Please enter a description.");
+            return;
+        }
+        try {
+            Difficulty difficulty = new Difficulty((String) difficultyBox.getSelectedItem());
+            Completed completed = new Completed(completedBox.isSelected());
+            DueTime due = new DueTime(
+                    (int) monthSpinner.getValue(),
+                    (int) daySpinner.getValue(),
+                    (int) hourSpinner.getValue(),
+                    (int) minuteSpinner.getValue(),
+                    (String) amPmBox.getSelectedItem());
+            tasks.add(new Task(description, difficulty, completed, due));
+            descriptionField.setText("");
+            refreshTable();
+            showStatus("Added \"" + description + "\"");
+        } catch (IllegalArgumentException e) {
+            showError(e.getMessage());
+        }
     }
 
     /**
@@ -208,7 +227,7 @@ public class TodoGui extends JFrame {
      *     for example: "Sorted by difficulty: verified".
      */
     private <K extends Comparable<K>> void sortBy(Function<Task, K> key, String propertyName) {
-        // TODO
+        Task[] a = tasks.toArray(new Task[0]);
         showError("sortBy is not finished yet");
     }
 
@@ -221,7 +240,11 @@ public class TodoGui extends JFrame {
      * Do this one first: the loaded tasks will appear as soon as it works.
      */
     private void refreshTable() {
-        // TODO
+        tableModel.setRowCount(0);
+        for (Task t : tasks) {
+            tableModel.addRow(new Object[]{
+                    t.getDescription(), t.getDifficulty(), t.getCompleted(), t.getDueTime()});
+        }
     }
 
     // ---------- Provided helpers ----------

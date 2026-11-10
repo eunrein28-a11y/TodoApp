@@ -13,7 +13,13 @@ public class Completed implements Comparable<Completed> {
      */
     @Override
     public int compareTo(Completed other) {
-        throw new UnsupportedOperationException("TODO: implement Completed.compareTo");
+        if(this.isDone() && !other.isDone()){
+            return 1;
+        }
+        if(!this.isDone() && other.isDone()){
+            return -1;
+        }
+        return 0;
     }
 
     @Override

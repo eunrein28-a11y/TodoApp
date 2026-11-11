@@ -228,7 +228,16 @@ public class TodoGui extends JFrame {
      */
     private <K extends Comparable<K>> void sortBy(Function<Task, K> key, String propertyName) {
         Task[] a = tasks.toArray(new Task[0]);
-        showError("sortBy is not finished yet");
+        if(propertyName.equals("due time")){
+            propertyName = "dueTime";
+        }
+        Sorts.bubbleSort(a, propertyName);
+        tasks.clear();
+        for(Task t : a){
+            tasks.add(t);
+        }
+        refreshTable();
+        statusLabel.setText("Sorted by difficulty: " + Sorts.isSorted(a,propertyName));
     }
 
     /**

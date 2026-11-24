@@ -4,6 +4,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Scanner;
 import java.util.function.Function;
 
@@ -101,15 +102,15 @@ public class TodoGui extends JFrame {
         buttons.add(new JLabel("   Sort by:"));
 
         JButton byDifficulty = new JButton("Difficulty");
-        byDifficulty.addActionListener(e -> sortBy(Task::getDifficulty, "difficulty"));
+        byDifficulty.addActionListener(e -> sortBy(Task::getDifficulty, new TaskComparators.ByDifficulty()));
         buttons.add(byDifficulty);
 
         JButton byCompleted = new JButton("Completed");
-        byCompleted.addActionListener(e -> sortBy(Task::getCompleted, "completed"));
+        byCompleted.addActionListener(e -> sortBy(Task::getCompleted, new TaskComparators.ByCompleted()));
         buttons.add(byCompleted);
 
         JButton byDueTime = new JButton("Due Time");
-        byDueTime.addActionListener(e -> sortBy(Task::getDueTime, "due time"));
+        byDueTime.addActionListener(e -> sortBy(Task::getDueTime, new TaskComparators.ByDueTime()));
         buttons.add(byDueTime);
 
         bottom.add(buttons, BorderLayout.CENTER);
@@ -226,18 +227,15 @@ public class TodoGui extends JFrame {
      *   - Set the status label to say whether Sorts.isSortedBy(arr, key) is true,
      *     for example: "Sorted by difficulty: verified".
      */
-    private <K extends Comparable<K>> void sortBy(Function<Task, K> key, String propertyName) {
+    private <K extends Comparable<K>> void sortBy(Function<Task, K> key, Comparator<Task> c) {
         Task[] a = tasks.toArray(new Task[0]);
-        if(propertyName.equals("due time")){
-            propertyName = "dueTime";
-        }
-        Sorts.bubbleSort(a, propertyName);
+        Sorts.bubbleSort(a, c);
         tasks.clear();
         for(Task t : a){
             tasks.add(t);
         }
         refreshTable();
-        statusLabel.setText("Sorted by difficulty: " + Sorts.isSorted(a,propertyName));
+        statusLabel.setText("Sorted by difficulty: " + Sorts.isSorted(a,c));
     }
 
     /**

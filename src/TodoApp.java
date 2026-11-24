@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Scanner;
 
 /**
@@ -31,9 +32,9 @@ public class TodoApp {
             String choice = in.nextLine().trim();
             switch (choice) {
                 case "1": show(tasks); break;
-                case "2": sortAndShow(tasks, "difficulty"); break;
-                case "3": sortAndShow(tasks, "completed"); break;
-                case "4": sortAndShow(tasks, "dueTime"); break;
+                case "2": sortAndShow(tasks, new TaskComparators.ByDifficulty()); break;
+                case "3": sortAndShow(tasks, new TaskComparators.ByCompleted()); break;
+                case "4": sortAndShow(tasks, new TaskComparators.ByDueTime()); break;
                 case "5": return;
                 default: System.out.println("Please enter 1-5.");
             }
@@ -90,12 +91,12 @@ public class TodoApp {
     }
 
     /** field is "difficulty", "completed", or "dueTime". */
-    private static void sortAndShow(ArrayList<Task> tasks, String field) {
+    private static void sortAndShow(ArrayList<Task> tasks, Comparator<Task> c) {
         Task[] arr = tasks.toArray(new Task[0]);
-        Sorts.bubbleSort(arr, field);
-        System.out.println("Sorted by " + field + ":");
+        Sorts.bubbleSort(arr, c);
+        System.out.println("Sorted by " + c + ":");
         for (Task t : arr) System.out.println("  " + t);
-        System.out.println("isSorted check: " + Sorts.isSorted(arr, field));
+        System.out.println("isSorted check: " + Sorts.isSorted(arr, c));
     }
 
     private static void show(ArrayList<Task> tasks) {

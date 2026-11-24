@@ -1,3 +1,5 @@
+import java.util.Comparator;
+
 /** Sorting utilities. Students finish isSorted and bubbleSort. */
 public class Sorts {
 
@@ -6,17 +8,8 @@ public class Sorts {
      * field is "difficulty", "completed", or "dueTime".
      * It uses the compareTo methods you finished in Difficulty, Completed, and DueTime.
      */
-    public static boolean less(Task v, Task w, String field) {
-        switch (field) {
-            case "difficulty":
-                return v.getDifficulty().compareTo(w.getDifficulty()) < 0;
-            case "completed":
-                return v.getCompleted().compareTo(w.getCompleted()) < 0;
-            case "dueTime":
-                return v.getDueTime().compareTo(w.getDueTime()) < 0;
-            default:
-                throw new IllegalArgumentException("Unknown field: " + field);
-        }
+    public static boolean less(Task v, Task w, Comparator<Task> c) {
+        return c.compare(v, w) < 0;
     }
 
     /** Provided: swap a[i] and a[j]. */
@@ -32,9 +25,9 @@ public class Sorts {
      * return false. Otherwise return true.
      * Use: less(a[i], a[i - 1], field)
      */
-    public static boolean isSorted(Task[] a, String field) {
+    public static boolean isSorted(Task[] a, Comparator<Task> c) {
         for(int i = 1; i < a.length; i++){
-            if(less(a[i],a[i-1],field)){
+            if(less(a[i],a[i-1],c)){
                 return false;
             }
         }
@@ -49,11 +42,11 @@ public class Sorts {
      *     so each pass can stop one spot earlier.
      *   - Challenge: stop early if a whole pass makes no swaps.
      */
-    public static void bubbleSort(Task[] a, String field) {
+    public static void bubbleSort(Task[] a, Comparator<Task> c) {
         for(int i = 0; i < a.length; i++){
             int count = 0;
             for(int j = 0; j < a.length - 1 - i; j++){
-                if(less(a[j + 1], a[j], field)){
+                if(less(a[j + 1], a[j], c)){
                     exchange(a,j,j+1);
                     count++;
                 }
